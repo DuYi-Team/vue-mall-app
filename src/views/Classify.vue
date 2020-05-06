@@ -4,16 +4,41 @@
       <van-icon name="search" />
       <div class="search-value">{{place}}</div>
     </router-link>
+    <!-- 水平滚动 -->
+   <Tabs></Tabs>
   </div>
 </template>
 
 <script>
+import Tabs from '../components/Tab.vue';
+
 export default {
   data() {
     return {
       value: '',
       place: '荔枝水果9.99',
+      tabList: [
+        {
+          title: '时令水果',
+          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
+        },
+        {
+          title: '时令水果',
+          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
+        },
+        {
+          title: '时令水果',
+          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
+        },
+        {
+          title: '时令水果',
+          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
+        },
+      ],
     };
+  },
+  components: {
+    Tabs,
   },
   methods: {
     bindToSearch() {
@@ -27,16 +52,16 @@ export default {
 // @import "../tools/tools.less";
 .classify-wrapper {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  position: absolute;
   background: rgb(238, 238, 238);
+  font-size: 14px;
   // overflow: hidden;
   .search-btn {
     height: 31.5px;
     line-height: 31.5px;
     width: 355px;
-    position: relative;
-    top: 10.76px;
-    margin: 0 auto;
+    margin: 10.76px auto 0;
     background-color: #fff;
     border-radius: 10px;
     text-align: center;
@@ -47,4 +72,13 @@ export default {
     }
   }
 }
+.tabs-wrapper {
+  display: flex;
+  height: 67.5px;
+  margin: 11px 0 10px;
+}
+</style>
+
+<style>
+
 </style>
