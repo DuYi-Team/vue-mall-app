@@ -5,9 +5,7 @@ const instance = Axios.create({
   baseURL: URLs.baseURL,
 });
 
-function likeSearch(value) {
-  return instance.get(URLs.likeSearch, { params: { likeValue: value } });
-}
+const likeSearch = (value) => instance.get(URLs.likeSearch, { params: { likeValue: value } });
 
 export default {
   likeSearch,
