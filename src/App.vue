@@ -32,7 +32,7 @@ export default {
 </script>
 
 <style>
-  .view {
+.view {
   position: absolute;
   left: 0;
   top: 0;

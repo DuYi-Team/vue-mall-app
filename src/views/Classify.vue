@@ -6,17 +6,22 @@
     </router-link>
     <!-- 水平滚动 -->
    <Tabs></Tabs>
+   <div class="classify-content">
+     <side-bar></side-bar>
+   </div>
   </div>
 </template>
 
 <script>
 import Tabs from '../components/Tab.vue';
+import sideBar from '../components/sideBar.vue';
 
 export default {
   data() {
     return {
       value: '',
       place: '荔枝水果9.99',
+      activeKey: '',
       tabList: [
         {
           title: '时令水果',
@@ -39,6 +44,7 @@ export default {
   },
   components: {
     Tabs,
+    sideBar,
   },
   methods: {
     bindToSearch() {
@@ -54,7 +60,6 @@ export default {
   width: 100%;
   min-height: 100vh;
   position: absolute;
-  background: rgb(238, 238, 238);
   font-size: 14px;
   // overflow: hidden;
   .search-btn {
@@ -62,10 +67,10 @@ export default {
     line-height: 31.5px;
     width: 355px;
     margin: 10.76px auto 0;
-    background-color: #fff;
+    background: #eee;
     border-radius: 10px;
     text-align: center;
-    color: rgb(161, 161, 161);
+    color: #a1a1a1;
     >* {
       vertical-align: middle;
       display: inline-block;
@@ -77,6 +82,7 @@ export default {
   height: 67.5px;
   margin: 11px 0 10px;
 }
+
 </style>
 
 <style>

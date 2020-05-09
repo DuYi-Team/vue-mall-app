@@ -174,6 +174,7 @@ export default {
     }
     .active {
       .img-box {
+        background: #fff;
         border-color: #d13193;
       }
       .title-box {
