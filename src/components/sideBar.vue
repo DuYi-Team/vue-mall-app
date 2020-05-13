@@ -1,10 +1,13 @@
 <template>
-  <div class="side-bar-wrapper" @click="scrollTo" ref="side">
+  <div class="side-bar-wrapper"
+  @touchstart="move=false"
+  @touchmove="move=true"
+  @touchend="scrollTo" ref="side">
       <div
       v-for="key in list"
       :key="key"
       :class="{active: value == key}"
-      @click="getValue(key)">{{ key }}</div>
+      @touchend="getValue(key)">{{ key }}</div>
   </div>
 </template>
 
@@ -12,23 +15,33 @@
 export default {
   data() {
     return {
+      move: false,
       value: '全部',
+      nextSibling: null,
       list: [
         '全部', '热销爆款', '周末特价', '苹果', '香梨', '柚子', '榴莲',
-        '西瓜', '奇异果', '车厘子', '火龙果', '牛油果'],
+        '西瓜', '奇异果', '车厘子', '火龙果', '牛油果',
+        '西瓜1', '奇异果1', '车厘子1', '火龙果1', '牛油果1'],
     };
   },
   methods: {
     scrollTo(e) {
+      this.nextSibling = e.target.nextElementSibling;
       const cTop = e.target.getBoundingClientRect().top;
       const sideTop = this.$refs.side.offsetTop;
       const sideHeight = this.$refs.side.offsetHeight / 2;
       this.moveScroll(this.$refs.side.scrollTop, (sideHeight - (cTop - sideTop)));
     },
     getValue(key) {
+      if (this.move) {
+        return;
+      }
       this.value = key;
     },
     moveScroll(start, end) {
+      if (this.move) {
+        return;
+      }
       let dis = 0;
       let speed = 5;
       if (end > 0) {
@@ -43,6 +56,12 @@ export default {
         }
       }, 2);
     },
+    sb() {
+      if (this.nextSibling) {
+        this.getValue(this.nextSibling.innerText);
+        this.scrollTo({ target: this.nextSibling });
+      }
+    },
   },
 };
 
@@ -52,6 +71,7 @@ export default {
   .side-bar-wrapper {
     position: fixed;
     top: 135px;
+    left: 0;
     width: 79px;
     bottom: 1.33333rem;
     overflow: auto;
@@ -59,8 +79,8 @@ export default {
         width: 100%;
         text-align: center;
         font-size: 12px;
-        height: 50px;
-        line-height: 50px;
+        height: 40px;
+        line-height: 40px;
         position: relative;
       }
       .active {

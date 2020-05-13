@@ -7,7 +7,8 @@
     <!-- 水平滚动 -->
    <Tabs></Tabs>
    <div class="classify-content">
-     <side-bar></side-bar>
+     <side-bar ref="sb"></side-bar>
+     <List></List>
    </div>
   </div>
 </template>
@@ -15,6 +16,7 @@
 <script>
 import Tabs from '../components/Tab.vue';
 import sideBar from '../components/sideBar.vue';
+import List from '../components/List.vue';
 
 export default {
   data() {
@@ -45,11 +47,17 @@ export default {
   components: {
     Tabs,
     sideBar,
+    List,
   },
   methods: {
     bindToSearch() {
 
     },
+  },
+  mounted() {
+    setTimeout(() => {
+      this.$refs.sb.sb();
+    }, 3000);
   },
 };
 </script>
