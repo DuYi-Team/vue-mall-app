@@ -109,6 +109,7 @@ export default {
   methods: {
     scrollTo(e) {
       if (this.move) return;
+      this.$store.commit('resetGoodsList');
       if (e.target.dataset.id) {
         this.index = e.target.dataset.id;
       } else if (e.target.parentElement.dataset.id) {
