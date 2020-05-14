@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import { mapActions, mapMutations } from 'vuex';
+
 export default {
   data() {
     return {
@@ -30,7 +32,10 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(['resetGoodsList']),
+    ...mapActions(['getGoodsList']),
     scrollTo(e) {
+      this.resetGoodsList();
       this.nextSibling = e.target.nextElementSibling;
       const cTop = e.target.getBoundingClientRect().top;
       const sideTop = this.$refs.side.offsetTop;
@@ -42,6 +47,7 @@ export default {
         return;
       }
       this.value = key;
+      this.getGoodsList(this.value);
     },
     moveScroll(start, end) {
       if (this.move) {
@@ -69,11 +75,14 @@ export default {
       }
     },
   },
+  mounted() {
+    this.list = this.menuList;
+    [this.value] = this.list;
+  },
   watch: {
     menuList() {
       this.list = this.menuList;
       [this.value] = this.list;
-      this.$refs.side.scrollTop = 0;
     },
   },
 };

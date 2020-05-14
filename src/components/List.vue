@@ -8,14 +8,14 @@
       :class="{'price-up': type==='price-up', 'price-down': type === 'price-down'}"
       @touchend="changeType('price')">价格</div>
     </div>
-    <div class="list-content" v-if="!showLoading">
+    <div class="list-content" v-if="!showLoading" @touchmove="up">
       <van-pull-refresh v-model="isLoad" @refresh="onRefresh" head-height="80">
         <van-list
           v-model="loading"
           :finished="finished"
           @load="onLoad"
         >
-          <div class="card van-hairline--bottom" v-for="item in list" :key="item.id">
+          <div class="card van-hairline--bottom" v-for="(item,i) in list" :key="i">
              <div class="card-img">
                <img :src="item.img" alt="">
              </div>
@@ -36,14 +36,16 @@
                </div>
              </div>
           </div>
+          <div class="pullup" v-if="finished">下拉刷新</div>
         </van-list>
       </van-pull-refresh>
     </div>
-    <van-loading class="center" v-else  vertical color="pink"></van-loading>
+    <van-loading class="center" size="1rem" v-else  vertical color="pink"></van-loading>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 // n 测试数据
 export default {
   data() {
@@ -54,25 +56,13 @@ export default {
       isLoad: false,
       finished: false,
       loading: false,
-      n: 0,
-      list: [
-        {
-          id: 0,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-      ],
     };
   },
   mounted() {
     this.counterMap = JSON.parse(localStorage.getItem('goods')) || {};
   },
   methods: {
+    ...mapActions(['getGoodsList']),
     addCounter(id, value) {
       if (this.counterMap[id]) {
         this.$set(this.counterMap, id, this.counterMap[id] + value);
@@ -82,24 +72,31 @@ export default {
       localStorage.setItem('goods', JSON.stringify(this.counterMap));
     },
     onLoad() {
-      if (this.list.length === 20) {
-        this.finished = true;
+      if (this.finished) {
+        return;
       }
-      setTimeout(() => {
-        this.n += 1;
-        this.list.push({
-          id: this.n,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        });
+      this.getGoodsList().then(() => {
         this.loading = false;
         this.showLoading = false;
-      }, 300);
+        if (this.list.length >= this.total) {
+          this.finished = true;
+        }
+      });
+      // setTimeout(() => {
+      //   this.n += 1;
+      //   this.list.push({
+      //     id: this.n,
+      //     img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
+      //     title: '据说苹果很好吃 木大木大木大大',
+      //     price: 99.9,
+      //     priceOff: 33.3,
+      //     desc: '据说苹果很好吃 木大木大木大大',
+      //     tags: ['24小时发货'],
+      //     sale: 10000,
+      //   });
+      //   this.loading = false;
+      //   this.showLoading = false;
+      // }, 300);
     },
     changeType(val) {
       if (val === 'price') {
@@ -115,21 +112,33 @@ export default {
       setTimeout(() => {
         this.finished = false;
         this.isloading = false;
-        this.list = this.list.sort();
+        this.list.sort();
         this.isLoad = false;
         this.showLoading = false;
       }, 300);
     },
     onRefresh() {
-      this.n = -1;
       this.showLoading = true;
       setTimeout(() => {
         this.finished = false;
         this.isloading = false;
-        this.list = [];
         this.isLoad = false;
         this.onLoad();
       }, 300);
+    },
+    up() {
+    },
+  },
+  computed: {
+    ...mapState({
+      list: (state) => state.goodsList,
+      total: (state) => state.goodsTotal,
+      goodsType: (state) => state.goodsType,
+    }),
+  },
+  watch: {
+    goodsType() {
+      this.finished = false;
     },
   },
 };
@@ -298,5 +307,11 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+  .pullup {
+    width: 100%;
+    height: 100px;
+    background: lime;
+    display: none;
   }
 </style>
