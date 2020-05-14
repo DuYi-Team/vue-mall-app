@@ -5,23 +5,29 @@
       <div class="search-value">{{place}}</div>
     </router-link>
     <!-- 水平滚动 -->
-   <Tabs></Tabs>
-   <div class="classify-content">
-     <side-bar ref="sb"></side-bar>
+   <Tabs @handlerChange="getSide"></Tabs>
+   <div class="classify-content" v-show="show">
+     <side-bar ref="sb" :menuList="sideList" ></side-bar>
      <List></List>
    </div>
+   <van-loading class="center" size="1.3rem" color="pink" v-show="!show" />
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import Tabs from '../components/Tab.vue';
 import sideBar from '../components/sideBar.vue';
 import List from '../components/List.vue';
 
 export default {
+  created() {
+    this.getSideList(this.value);
+  },
   data() {
     return {
-      value: '',
+      value: '时令水果',
+      show: true,
       place: '荔枝水果9.99',
       activeKey: '',
       tabList: [
@@ -44,20 +50,38 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState({
+      sideList: (state) => state.sideList,
+    }),
+  },
   components: {
     Tabs,
     sideBar,
     List,
   },
   methods: {
-    bindToSearch() {
-
+    ...mapActions(['getSideList']),
+    getSide(value) {
+      this.show = false;
+      console.log(1);
+      this.getSideList(value)
+        .then(() => {
+          setTimeout(() => {
+            this.show = true;
+          }, 500);
+        });
     },
   },
   mounted() {
-    setTimeout(() => {
-      this.$refs.sb.sb();
-    }, 3000);
+    // setTimeout(() => {
+    //   this.$refs.sb.sb();
+    // }, 3000);
+  },
+  watch: {
+    sideList() {
+      console.log('111111');
+    },
   },
 };
 </script>
@@ -90,9 +114,11 @@ export default {
   height: 67.5px;
   margin: 11px 0 10px;
 }
-
-</style>
-
-<style>
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 </style>

@@ -16,13 +16,18 @@ export default {
   data() {
     return {
       move: false,
-      value: '全部',
+      value: '',
       nextSibling: null,
-      list: [
-        '全部', '热销爆款', '周末特价', '苹果', '香梨', '柚子', '榴莲',
-        '西瓜', '奇异果', '车厘子', '火龙果', '牛油果',
-        '西瓜1', '奇异果1', '车厘子1', '火龙果1', '牛油果1'],
+      list: [],
     };
+  },
+  props: {
+    menuList: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
   },
   methods: {
     scrollTo(e) {
@@ -57,10 +62,18 @@ export default {
       }, 2);
     },
     sb() {
-      if (this.nextSibling) {
-        this.getValue(this.nextSibling.innerText);
-        this.scrollTo({ target: this.nextSibling });
+      const sibling = this.nextSibling || this.$refs.side.children[0];
+      if (sibling) {
+        this.getValue(sibling.innerText);
+        this.scrollTo({ target: sibling });
       }
+    },
+  },
+  watch: {
+    menuList() {
+      this.list = this.menuList;
+      [this.value] = this.list;
+      this.$refs.side.scrollTop = 0;
     },
   },
 };

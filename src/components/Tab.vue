@@ -116,6 +116,7 @@ export default {
       } else {
         this.index = e.target.parentElement.parentElement.dataset.id;
       }
+      this.$emit('handlerChange', this.menuList[this.index].title);
       const itemOL = e.target.getBoundingClientRect().left;
       const itemOW = e.target.offsetWidth;
       const wrapperWidth = this.$refs.scroll.clientWidth;
