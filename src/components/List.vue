@@ -15,7 +15,7 @@
           :finished="finished"
           @load="onLoad"
         >
-          <div class="card van-hairline--bottom" v-for="(item,i) in list" :key="i">
+          <!-- <div class="card van-hairline--bottom" v-for="(item,i) in list" :key="i">
              <div class="card-img">
                <img :src="item.img" alt="">
              </div>
@@ -35,7 +35,19 @@
                  <div @click="addCounter(item.id,1)">+</div>
                </div>
              </div>
-          </div>
+          </div> -->
+          <Card
+          v-for="(item,i) in list"
+          :key="i"
+          :id="item.id"
+          :title="item.title"
+          :desc="item.desc"
+          :priceOff="item.priceOff"
+          :price="item.price"
+          :thumb="item.img"
+          :num="counterMap[item.id]"
+          :tags="item.tags"
+          @changeHandler="addCounter"></Card>
           <div class="pullup" v-if="finished">下拉刷新</div>
         </van-list>
       </van-pull-refresh>
@@ -46,20 +58,20 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import Card from './card.vue';
 // n 测试数据
 export default {
+  components: {
+    Card,
+  },
   data() {
     return {
-      counterMap: {},
       showLoading: false,
       type: 'all',
       isLoad: false,
       finished: false,
       loading: false,
     };
-  },
-  mounted() {
-    this.counterMap = JSON.parse(localStorage.getItem('goods')) || {};
   },
   methods: {
     ...mapActions(['getGoodsList']),
@@ -82,21 +94,6 @@ export default {
           this.finished = true;
         }
       });
-      // setTimeout(() => {
-      //   this.n += 1;
-      //   this.list.push({
-      //     id: this.n,
-      //     img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-      //     title: '据说苹果很好吃 木大木大木大大',
-      //     price: 99.9,
-      //     priceOff: 33.3,
-      //     desc: '据说苹果很好吃 木大木大木大大',
-      //     tags: ['24小时发货'],
-      //     sale: 10000,
-      //   });
-      //   this.loading = false;
-      //   this.showLoading = false;
-      // }, 300);
     },
     changeType(val) {
       if (val === 'price') {
@@ -131,6 +128,7 @@ export default {
   },
   computed: {
     ...mapState({
+      counterMap: (state) => state.counterMap,
       list: (state) => state.goodsList,
       total: (state) => state.goodsTotal,
       goodsType: (state) => state.goodsType,

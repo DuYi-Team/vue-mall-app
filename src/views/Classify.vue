@@ -6,11 +6,11 @@
     </router-link>
     <!-- 水平滚动 -->
    <Tabs @handlerChange="getSide"></Tabs>
-   <div class="classify-content" v-show="show">
+   <div class="classify-content" v-if="show">
      <side-bar ref="sb" :menuList="sideList" ></side-bar>
      <List></List>
    </div>
-   <van-loading class="center" size="1.3rem" color="pink" v-show="!show" />
+   <van-loading class="center" size="1.3rem" color="pink" v-else />
   </div>
 </template>
 
@@ -30,24 +30,6 @@ export default {
       show: true,
       place: '荔枝水果9.99',
       activeKey: '',
-      tabList: [
-        {
-          title: '时令水果',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
-        },
-        {
-          title: '时令水果',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
-        },
-        {
-          title: '时令水果',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
-        },
-        {
-          title: '时令水果',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2019/01/06/20190106741096_PBvKXO.jpg',
-        },
-      ],
     };
   },
   computed: {
@@ -64,7 +46,6 @@ export default {
     ...mapActions(['getSideList']),
     getSide(value) {
       this.show = false;
-      console.log(1);
       this.getSideList(value)
         .then(() => {
           setTimeout(() => {
@@ -77,11 +58,6 @@ export default {
     // setTimeout(() => {
     //   this.$refs.sb.sb();
     // }, 3000);
-  },
-  watch: {
-    sideList() {
-      console.log('111111');
-    },
   },
 };
 </script>

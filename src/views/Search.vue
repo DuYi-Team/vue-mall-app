@@ -16,7 +16,9 @@
           <div @click="onSearch">搜索</div>
         </template>
          <template #action v-else>
-          <div @click="onSearch" class="shop-car"><van-icon name="shopping-cart-o" badge="9"/></div>
+          <div @click="onSearch" class="shop-car">
+            <van-icon name="shopping-cart-o" :badge="badge"/>
+          </div>
         </template>
       </van-search>
     </div>
@@ -30,43 +32,97 @@
       </van-list>
     </div>
     <div class="goods-card" v-if="!showList">
-    <van-card
-      price="2.00"
-      desc="描述信息"
-      title="商品标题"
-      thumb="https://img.yzcdn.cn/vant/ipad.jpeg"
-    >
-    <template #tags>
-    <van-tag plain type="danger">标签</van-tag>
-    <van-tag plain type="danger">标签</van-tag>
-    </template>
-    <template #footer>
-    <van-button size="mini">+</van-button>
-    <span>2</span>
-    <van-button size="mini">-</van-button>
-  </template>
-</van-card>
+      <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+      >
+      <Card v-for="(item, i) in list" :key="i"
+        :id="item.id"
+        :title="item.title"
+        :desc="item.desc"
+        :priceOff="item.priceOff"
+        :price="item.price"
+        :thumb="item.img"
+        :num="counterMap[item.id]"
+        :tags="item.tags"
+        @changeHandler="addCounter"></Card>
+    </van-list>
+    </div>
+    <div class="history">
+       <History :searchList="searchList" @search="onSearch"></History>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import Card from '../components/card.vue';
+import History from '../components/history.vue';
+
 export default {
+  components: {
+    Card,
+    History,
+  },
   data() {
     return {
+      searchList: [],
+      loading: false,
+      finished: false,
       value: '',
+      length: 0,
       place: '芒果10块2斤',
       likeList: [],
       showList: true,
+      list: [],
     };
   },
   methods: {
-    onSearch() {
+    addCounter(id, value) {
+      if (this.counterMap[id]) {
+        this.$set(this.counterMap, id, this.counterMap[id] + value);
+      } else {
+        this.$set(this.counterMap, id, 1);
+      }
+      localStorage.setItem('goods', JSON.stringify(this.counterMap));
+    },
+    onSearch(val) {
+      if (val) {
+        this.value = val;
+      }
       this.likeList = [];
       if (this.value === '') {
         this.value = this.place;
       }
-      this.showList = false;
+      const result = this.searchList.find((item) => item.value === this.value);
+      if (result) {
+        result.time = new Date().getTime();
+        this.searchList.sort((a, b) => b.time - a.time);
+      } else {
+        this.searchList.unshift({ value: this.value, time: new Date().getTime() });
+        if (this.searchList.length >= 11) {
+          this.searchList.pop();
+        }
+      }
+      localStorage.setItem('searchList', JSON.stringify(this.searchList));
+      this.$api.Search(this.value).then((data) => {
+        this.length = data.data.total;
+        this.list = [...this.list, ...data.data.list];
+        this.showList = false;
+      });
+    },
+    onLoad() {
+      this.$api.Search(this.value).then((data) => {
+        this.length = data.data.total;
+        this.list = [...this.list, ...data.data.list];
+        this.loading = false;
+        // 数据全部加载完成
+        if (this.list.length >= this.length) {
+          this.finished = true;
+        }
+      });
     },
     input() {
       if (this.value === '') {
@@ -85,6 +141,21 @@ export default {
       this.showList = true;
     },
   },
+  computed: {
+    ...mapState({
+      counterMap: (state) => state.counterMap,
+    }),
+    badge() {
+      const l = Object.values(this.counterMap).reduce((prev, next) => prev + next);
+      if (l > 99) {
+        return '99+';
+      }
+      return l;
+    },
+  },
+  created() {
+    this.searchList = JSON.parse(localStorage.getItem('searchList')) || [];
+  },
 };
 </script>
 
@@ -93,12 +164,17 @@ export default {
   width: 100%;
   height: 100vh;
   z-index: 10;
-  background: white;
+  background: #fff;
   .search-head {
     width: 345px;
+    background: #fff;
     margin: 0 auto;
     display: flex;
     align-items: center;
+    position: fixed;
+    left: 15px;
+    top: 0;
+    z-index: 100;
     .arr-left {
       font-size: 22px;
     }
@@ -109,8 +185,28 @@ export default {
       }
     }
   }
+  .like-search {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 30px;
+    background: #fff;
+    z-index: 10;
+  }
+  .goods-card {
+    position: relative;
+    width: 345px;
+    margin: 43px auto 0;
+    z-index: 10;
+    background: #fff;
+  }
+  .history {
+    width: 350px;
+    position: absolute;
+    top: 35px;
+    left: 10px;
+    z-index: 1;
+  }
 }
-.like-search {
-  margin-left: 30px;
-}
+
 </style>

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Classify from '@/views/Classify.vue';
 import Search from '@/views/Search.vue';
 import Home from '@/views/Home.vue';
+import Shopping from '@/views/shopping.vue';
 
 VueRouter.prototype.back = false;
 VueRouter.prototype.goBack = function goBack() {
@@ -29,6 +30,11 @@ const routes = [
         path: 'classify',
         name: 'classify',
         component: Classify,
+      },
+      {
+        path: 'shopping',
+        name: 'shopping',
+        component: Shopping,
       },
     ],
   },
