@@ -1,5 +1,9 @@
 <template>
-  <div class="list-wrapper">
+  <div class="list-wrapper"
+  @touchstart="disB=0"
+  @touchmove="up"
+  @touchend="end"
+  ref="wrapper">
     <div class="list-header">
       <div :class="{active: type === 'all'}" @touchend="changeType('all')">综合</div>
       <div :class="{active: type === 'sale'}" @touchend="changeType('sale')">销量</div>
@@ -8,34 +12,14 @@
       :class="{'price-up': type==='price-up', 'price-down': type === 'price-down'}"
       @touchend="changeType('price')">价格</div>
     </div>
-    <div class="list-content" v-if="!showLoading" @touchmove="up">
+    <div class="list-content" v-if="!showLoading" ref="list">
       <van-pull-refresh v-model="isLoad" @refresh="onRefresh" head-height="80">
         <van-list
           v-model="loading"
           :finished="finished"
           @load="onLoad"
+          :finished-text="msg"
         >
-          <!-- <div class="card van-hairline--bottom" v-for="(item,i) in list" :key="i">
-             <div class="card-img">
-               <img :src="item.img" alt="">
-             </div>
-             <div class="card-content">
-               <div class="overflow-hidden title">{{item.title}}</div>
-               <div class="overflow-hidden desc">{{item.desc}}</div>
-               <div class="overflow-hidden tags">
-                 <div v-for="i in item.tags" :key="i">{{i}}</div>
-               </div>
-               <div class="overflow-hidden prices">
-                 <div class="price-off">{{item.priceOff}}</div>
-                 <div class="price">{{item.price}}</div>
-               </div>
-               <div class="counter">
-                 <div v-if="counterMap[item.id]" @click="addCounter(item.id, -1)">-</div>
-                 <div v-if="counterMap[item.id]" class="num">{{counterMap[item.id]}}</div>
-                 <div @click="addCounter(item.id,1)">+</div>
-               </div>
-             </div>
-          </div> -->
           <Card
           v-for="(item,i) in list"
           :key="i"
@@ -47,8 +31,8 @@
           :thumb="item.img"
           :num="counterMap[item.id]"
           :tags="item.tags"
+          :fly="true"
           @changeHandler="addCounter"></Card>
-          <div class="pullup" v-if="finished">下拉刷新</div>
         </van-list>
       </van-pull-refresh>
     </div>
@@ -71,6 +55,9 @@ export default {
       isLoad: false,
       finished: false,
       loading: false,
+      disB: 0,
+      pageY: 0,
+      msg: '上拉查看下一分类',
     };
   },
   methods: {
@@ -123,7 +110,41 @@ export default {
         this.onLoad();
       }, 300);
     },
-    up() {
+    up(e) {
+      const { wrapper, list } = this.$refs;
+      let speed = 5;
+      if (wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight) {
+        if (e.touches[0].pageY > this.pageY) {
+          speed = -5;
+        } else {
+          speed = 5;
+        }
+        this.pageY = e.touches[0].pageY;
+        this.disB += speed;
+        if (this.disB >= 150) {
+          this.disB = 150;
+        }
+        if (this.disB >= 90) {
+          this.msg = '释放查看下一分类';
+        } else {
+          this.msg = '上拉查看下一分类';
+        }
+        if (this.disB <= 0) {
+          this.disB = 0;
+        }
+        list.style.transform = `translateY(-${this.disB}px)`;
+      }
+    },
+    end() {
+      const { list } = this.$refs;
+      if (!list) {
+        return;
+      }
+      list.style.transform = 'translateY(0px)';
+      if (this.disB > 100) {
+        this.$emit('turnNext');
+      }
+      this.msg = '上拉查看下一分类';
     },
   },
   computed: {
@@ -144,6 +165,8 @@ export default {
 
 <style lang="less" scoped>
   .list-wrapper {
+    transform: translateY(0);
+    transition: all 2s;
     position: fixed;
     border-top: 1px solid #eee;
     top: 135px;
@@ -200,7 +223,6 @@ export default {
       }
     }
     .list-content {
-      height: 300px;
       position: relative;
       .list-item {
         background: red;
@@ -305,11 +327,5 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-  .pullup {
-    width: 100%;
-    height: 100px;
-    background: lime;
-    display: none;
   }
 </style>

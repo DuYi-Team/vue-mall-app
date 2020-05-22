@@ -175,7 +175,7 @@ export default {
     }),
     totalNum() {
       const resArr = this.list.filter((item) => this.result.includes(item.id));
-      const res = resArr.reduce((prev, next) => prev + this.counterMap[next.id] || 0, 0);
+      const res = resArr.reduce((prev, next) => prev + (this.counterMap[next.id] || 0), 0);
       return res;
     },
     allMoney() {

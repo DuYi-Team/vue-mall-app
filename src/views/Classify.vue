@@ -7,8 +7,8 @@
     <!-- 水平滚动 -->
    <Tabs @handlerChange="getSide"></Tabs>
    <div class="classify-content" v-if="show">
-     <side-bar ref="sb" :menuList="sideList" ></side-bar>
-     <List></List>
+     <side-bar ref="nb" :menuList="sideList" ></side-bar>
+     <List @turnNext="nextSibling"></List>
    </div>
    <van-loading class="center" size="1.3rem" color="pink" v-else />
   </div>
@@ -52,6 +52,9 @@ export default {
             this.show = true;
           }, 500);
         });
+    },
+    nextSibling() {
+      this.$refs.nb.nb();
     },
   },
   mounted() {

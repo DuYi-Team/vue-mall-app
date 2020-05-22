@@ -13,12 +13,12 @@
         autofocus
       >
         <template #action v-if="showList">
-          <div @click="onSearch">搜索</div>
+          <div @click="onSearch(value)">搜索</div>
         </template>
          <template #action v-else>
-          <div @click="onSearch" class="shop-car">
+          <router-link tag="div" class="shop-car" id="shop-car" to="/home/shopping">
             <van-icon name="shopping-cart-o" :badge="badge"/>
-          </div>
+          </router-link>
         </template>
       </van-search>
     </div>

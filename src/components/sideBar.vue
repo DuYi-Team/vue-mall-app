@@ -67,8 +67,8 @@ export default {
         }
       }, 2);
     },
-    sb() {
-      const sibling = this.nextSibling || this.$refs.side.children[0];
+    nb() {
+      const sibling = this.nextSibling || this.$refs.side.children[1];
       if (sibling) {
         this.getValue(sibling.innerText);
         this.scrollTo({ target: sibling });
