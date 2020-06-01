@@ -11,8 +11,28 @@ export default new Vuex.Store({
     goodsTotal: 0,
     goodsType: '',
     counterMap: {},
+    size: 7,
   },
   mutations: {
+    sortGoodsList(state, type) {
+      if (type === 'all') {
+        state.goodsList.sort((prev, next) => prev.id - next.id);
+      } else if (type === 'sale') {
+        state.goodsList.sort((prev, next) => next.sale - prev.sale);
+      } else if (type === 'price-up') {
+        state.goodsList.sort((prev, next) => {
+          const a = prev.priceOff || prev.price;
+          const b = next.priceOff || next.price;
+          return a - b;
+        });
+      } else if (type === 'price-down') {
+        state.goodsList.sort((prev, next) => {
+          const a = prev.priceOff || prev.price;
+          const b = next.priceOff || next.price;
+          return b - a;
+        });
+      }
+    },
     setCounterMap(state, map) {
       state.counterMap = map;
     },
@@ -29,17 +49,22 @@ export default new Vuex.Store({
     setGoodsType(state, type) {
       state.goodsType = type;
     },
+    resetList(state) {
+      state.goodsList = [];
+    },
   },
   actions: {
     getSideList({ commit, dispatch }, type) {
-      api.getSideList(type).then((data) => {
+      return api.getSideList(type).then((data) => {
         commit('setSideList', data.data);
-        return dispatch('getGoodsList', data.data[0]);
+        commit('setGoodsType', data.data[0]);
+        dispatch('getGoodsList', { type: data.data[0], page: 1 });
       });
     },
     getGoodsList({ commit, state }, t) {
-      const type = t || state.goodsType;
-      return api.getGoodsList(type).then((data) => {
+      const type = t.type || state.goodsType;
+      const { page } = t;
+      return api.getGoodsList(type, page, state.size).then((data) => {
         commit('setGoodsList', data.data);
         commit('setGoodsType', type);
       });

@@ -12,7 +12,8 @@
       :class="{'price-up': type==='price-up', 'price-down': type === 'price-down'}"
       @touchend="changeType('price')">价格</div>
     </div>
-    <div class="list-content" v-if="!showLoading" ref="list">
+    <div class="list-content"
+    v-if="!showLoading" :style="{transform: `translateY(-${this.disB}px)`}" ref="list">
       <van-pull-refresh v-model="isLoad" @refresh="onRefresh" head-height="80">
         <van-list
           v-model="loading"
@@ -41,7 +42,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import Card from './card.vue';
 // n 测试数据
 export default {
@@ -58,10 +59,12 @@ export default {
       disB: 0,
       pageY: 0,
       msg: '上拉查看下一分类',
+      nowPage: 1,
     };
   },
   methods: {
     ...mapActions(['getGoodsList']),
+    ...mapMutations(['resetList', 'sortGoodsList']),
     addCounter(id, value) {
       if (this.counterMap[id]) {
         this.$set(this.counterMap, id, this.counterMap[id] + value);
@@ -74,7 +77,8 @@ export default {
       if (this.finished) {
         return;
       }
-      this.getGoodsList().then(() => {
+      this.nowPage += 1;
+      this.getGoodsList({ type: this.goodsType, page: this.nowPage }).then(() => {
         this.loading = false;
         this.showLoading = false;
         if (this.list.length >= this.total) {
@@ -92,17 +96,20 @@ export default {
       } else {
         this.type = val;
       }
+      this.sortGoodsList(this.type);
       this.showLoading = true;
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.finished = false;
         this.isloading = false;
         this.list.sort();
         this.isLoad = false;
         this.showLoading = false;
-      }, 300);
+      });
     },
     onRefresh() {
+      this.nowPage = 0;
       this.showLoading = true;
+      this.resetList();
       setTimeout(() => {
         this.finished = false;
         this.isloading = false;
@@ -111,7 +118,7 @@ export default {
       }, 300);
     },
     up(e) {
-      const { wrapper, list } = this.$refs;
+      const { wrapper } = this.$refs;
       let speed = 5;
       if (wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight) {
         if (e.touches[0].pageY > this.pageY) {
@@ -132,7 +139,7 @@ export default {
         if (this.disB <= 0) {
           this.disB = 0;
         }
-        list.style.transform = `translateY(-${this.disB}px)`;
+        // list.style.transform = `translateY(-${this.disB}px)`;
       }
     },
     end() {
@@ -140,10 +147,10 @@ export default {
       if (!list) {
         return;
       }
-      list.style.transform = 'translateY(0px)';
       if (this.disB > 100) {
         this.$emit('turnNext');
       }
+      this.disB = 0;
       this.msg = '上拉查看下一分类';
     },
   },
@@ -158,6 +165,7 @@ export default {
   watch: {
     goodsType() {
       this.finished = false;
+      this.nowPage = 1;
     },
   },
 };
@@ -172,7 +180,7 @@ export default {
     top: 135px;
     right: 0;
     width: 296px;
-    bottom: 1.33333rem;
+    bottom: 50px;
     overflow: auto;
     .list-header {
       position: sticky;
@@ -224,6 +232,7 @@ export default {
     }
     .list-content {
       position: relative;
+      transition: translateY .3s;
       .list-item {
         background: red;
         border-bottom: 1px solid white;

@@ -25,83 +25,83 @@ export default {
       menuList: [
         {
           title: '时令水果',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/时令水果.jpg',
         },
         {
           title: '安心乳品',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/安心乳品.jpg',
         },
         {
           title: '休闲零食',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/休闲零食.jpg',
         },
         {
           title: '肉蛋食材',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/肉蛋食材.jpg',
         },
         {
           title: '新鲜蔬菜',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/新鲜食材.jpg',
         },
         {
           title: '熟食餐饮',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/熟食餐饮.jpg',
         },
         {
           title: '海鲜水产',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/海鲜水产.jpg',
         },
         {
           title: '粮油调味',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/粮油调味.jpg',
         },
         {
           title: '某手美食',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/某手美食.jpg',
         },
         {
           title: '纸杯清洁',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/纸品清洁.jpg',
         },
         {
           title: '个人护理',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/个人护理.jpg',
         },
         {
           title: '美妆护肤',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/美妆护肤.jpg',
         },
         {
           title: '家居收纳',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/家居收纳.jpg',
         },
         {
           title: '家用电器',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/家用电器.jpg',
         },
         {
           title: '3C数码',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/3C数码.jpg',
         },
         {
           title: '母婴用品',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/母婴用品.jpg',
         },
         {
           title: '鲜花绿植',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/鲜花绿植.jpg',
         },
         {
           title: '宠物用品',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/宠物用品.jpg',
         },
         {
           title: '图书玩具',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/图书文具.jpg',
         },
         {
           title: '手表配饰',
-          imgURL: 'http://img.doutula.com/production/uploads/image/2020/05/06/20200506726142_SUbHxC.jpg',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/手表配饰.jpg',
         },
       ],
     };
@@ -162,11 +162,12 @@ export default {
         border-color: transparent;
         border-radius: 23px;
         img {
-          width: 35px;
-          height: 35px;
+          width: 45px;
+          height: 45px;
           position: relative;
           top: 50%;
           transform: translateY(-50%);
+          border-radius: 50%;
         }
       }
       .title-box {

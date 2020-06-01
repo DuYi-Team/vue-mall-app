@@ -8,7 +8,7 @@
    <Tabs @handlerChange="getSide"></Tabs>
    <div class="classify-content" v-if="show">
      <side-bar ref="nb" :menuList="sideList" ></side-bar>
-     <List @turnNext="nextSibling"></List>
+     <List @turnNext="nextSibling" v-if="listShow"></List>
    </div>
    <van-loading class="center" size="1.3rem" color="pink" v-else />
   </div>
@@ -21,12 +21,14 @@ import sideBar from '../components/sideBar.vue';
 import List from '../components/List.vue';
 
 export default {
-  created() {
-    this.getSideList(this.value);
+  async created() {
+    await this.getSideList(this.value);
+    this.listShow = true;
   },
   data() {
     return {
       value: '时令水果',
+      listShow: false,
       show: true,
       place: '荔枝水果9.99',
       activeKey: '',

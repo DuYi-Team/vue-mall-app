@@ -10,7 +10,7 @@
 
 export default {
   name: 'app',
-  mounted() {
+  created() {
     const counterMap = JSON.parse(localStorage.getItem('goods')) || {};
     this.$store.commit('setCounterMap', counterMap);
   },

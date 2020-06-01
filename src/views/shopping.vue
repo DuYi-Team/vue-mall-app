@@ -24,7 +24,9 @@
         </div>
       </van-checkbox-group>
     </div>
-    <div class="card-list" v-else>啥也米有</div>
+    <div class="card-none" v-else>
+      <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/shopping_bg.jpg" alt="">
+    </div>
     <van-submit-bar :price="allMoney" :button-text="`去结算(${totalNum})`" @submit="onSubmit">
       <van-checkbox v-model="checked" @click="checkAll">全选</van-checkbox>
     </van-submit-bar>
@@ -40,88 +42,7 @@ export default {
     return {
       checked: false,
       result: [],
-      list: [
-        {
-          id: 0,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-        {
-          id: 1,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-        {
-          id: 2,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-        {
-          id: 3,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-        {
-          id: 4,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-        {
-          id: 5,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-        {
-          id: 6,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-        {
-          id: 7,
-          img: 'http://img.doutula.com/production/uploads/image/2020/05/12/20200512281863_hNPXgv.jpg',
-          title: '据说苹果很好吃 木大木大木大大',
-          price: 99.9,
-          priceOff: 33.3,
-          desc: '据说苹果很好吃 木大木大木大大',
-          tags: ['24小时发货'],
-          sale: 10000,
-        },
-      ],
+      list: [],
     };
   },
   components: {
@@ -147,14 +68,15 @@ export default {
     },
     onSubmit() {
     },
-    getAllData() {
-      const result = Object.entries(this.counterMap);
-      const arr = result.map(([key]) => new Promise((resolve) => {
-        resolve(key);
-      }));
-      Promise.all(arr).then((data) => {
-        this.list = data;
+    async getAllData() {
+      const result = Object.keys(this.counterMap);
+      const res = await this.$api.getGoodsByIds(result.join());
+      this.$nextTick(() => {
+        this.list = res.data.list;
       });
+      if (this.$refs.checkboxGroup) {
+        this.$refs.checkboxGroup.toggleAll(true);
+      }
     },
   },
   watch: {
@@ -186,7 +108,7 @@ export default {
     },
   },
   mounted() {
-    this.$refs.checkboxGroup.toggleAll(true);
+    this.getAllData();
   },
 };
 </script>
@@ -201,9 +123,17 @@ export default {
     background: #eee;
     min-height: 100vh;
   }
+  .card-none {
+    width: 100%;
+    position: absolute;
+    top: 50px;
+    img {
+      width: 100%;
+    }
+  }
   .card-list {
-    width: 330px;
-    margin: 50px auto 0;
+    width: 100%;
+    margin-top: 50px;
     box-sizing: border-box;
     padding: 10px 10px 100px 10px;
     background: #fff;

@@ -4,4 +4,5 @@ export default {
   getSide: '/getsidebar',
   getGoodsList: '/getgoodsList',
   search: '/search',
+  getGoodsByIds: '/getGoodsByIds',
 };

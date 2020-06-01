@@ -47,7 +47,7 @@ export default {
         return;
       }
       this.value = key;
-      this.getGoodsList(this.value);
+      this.getGoodsList({ type: this.value, page: 1 });
     },
     moveScroll(start, end) {
       if (this.move) {

@@ -7,11 +7,11 @@
       <div class="overflow-hidden title">{{title}}</div>
       <div class="overflow-hidden desc">{{desc}}</div>
       <div class="overflow-hidden tags">
-        <div v-for="i in tags" :key="i">{{i}}</div>
+        <div v-for="i in tags" :key="i" >{{i}}</div>
       </div>
       <div class="overflow-hidden prices">
-        <div class="price-off">{{priceOff}}</div>
-        <div class="price">{{price}}</div>
+        <div class="price-off">￥{{priceOff || price}}</div>
+        <div class="price" v-if="priceOff">￥{{price}}</div>
       </div>
       <div class="counter">
         <div v-if="num" @click="$emit('changeHandler', id, -1)">-</div>
@@ -92,6 +92,7 @@ export default {
     display: flex;
     .card-img {
       width: 90px;
+      margin-right: 20px;
       img {
         width: 90px;
         height: 90px;
@@ -101,7 +102,7 @@ export default {
       position: relative;
       flex: 1;
       >div {
-        width: 190px;
+        width: 170px;
         font-size: 12px;
       }
       .title {
@@ -122,6 +123,7 @@ export default {
           padding: 1px;
           color: #aaa;
           border-radius: 3px;
+          margin-right: 5px;
         }
 
       }

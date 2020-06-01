@@ -13,17 +13,22 @@ const getSideList = (value) => instance.get(
   URLs.getSide,
   { params: { type: value } },
 );
-const getGoodsList = (value) => instance.get(
+const getGoodsList = (value, page, size) => instance.get(
   URLs.getGoodsList,
-  { params: { type: value } },
+  { params: { type: value, page, size } },
 );
 const Search = (value) => instance.get(
   URLs.search,
   { params: { type: value } },
+);
+const getGoodsByIds = (value) => instance.get(
+  URLs.getGoodsByIds,
+  { params: { value } },
 );
 export default {
   likeSearch,
   getSideList,
   getGoodsList,
   Search,
+  getGoodsByIds,
 };
