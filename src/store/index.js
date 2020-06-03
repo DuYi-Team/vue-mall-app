@@ -12,9 +12,11 @@ export default new Vuex.Store({
     goodsType: '',
     counterMap: {},
     size: 7,
+    sortType: 'all',
   },
   mutations: {
     sortGoodsList(state, type) {
+      state.sortType = type;
       if (type === 'all') {
         state.goodsList.sort((prev, next) => prev.id - next.id);
       } else if (type === 'sale') {
@@ -67,6 +69,7 @@ export default new Vuex.Store({
       return api.getGoodsList(type, page, state.size).then((data) => {
         commit('setGoodsList', data.data);
         commit('setGoodsType', type);
+        commit('sortGoodsList', state.sortType);
       });
     },
   },

@@ -77,6 +77,8 @@ export default {
       likeList: [],
       showList: true,
       list: [],
+      page: 1,
+      size: 7,
     };
   },
   methods: {
@@ -92,6 +94,7 @@ export default {
       if (val) {
         this.value = val;
       }
+      this.finished = false;
       this.likeList = [];
       if (this.value === '') {
         this.value = this.place;
@@ -107,14 +110,17 @@ export default {
         }
       }
       localStorage.setItem('searchList', JSON.stringify(this.searchList));
-      this.$api.Search(this.value).then((data) => {
+      this.list = [];
+      this.page = 1;
+      this.$api.Search(this.value, this.page, this.size).then((data) => {
         this.length = data.data.total;
         this.list = [...this.list, ...data.data.list];
         this.showList = false;
       });
     },
     onLoad() {
-      this.$api.Search(this.value).then((data) => {
+      this.page += 1;
+      this.$api.Search(this.value, this.page, this.size).then((data) => {
         this.length = data.data.total;
         this.list = [...this.list, ...data.data.list];
         this.loading = false;
@@ -146,7 +152,7 @@ export default {
       counterMap: (state) => state.counterMap,
     }),
     badge() {
-      const l = Object.values(this.counterMap).reduce((prev, next) => prev + next);
+      const l = Object.values(this.counterMap).reduce((prev, next) => prev + next, 0);
       if (l > 99) {
         return '99+';
       }
@@ -196,7 +202,7 @@ export default {
   .goods-card {
     position: relative;
     width: 345px;
-    margin: 43px auto 0;
+    margin: 48px auto 0;
     z-index: 10;
     background: #fff;
   }

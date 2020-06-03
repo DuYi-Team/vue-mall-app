@@ -17,9 +17,9 @@ const getGoodsList = (value, page, size) => instance.get(
   URLs.getGoodsList,
   { params: { type: value, page, size } },
 );
-const Search = (value) => instance.get(
+const Search = (value, page, size) => instance.get(
   URLs.search,
-  { params: { type: value } },
+  { params: { type: value, page, size } },
 );
 const getGoodsByIds = (value) => instance.get(
   URLs.getGoodsByIds,

@@ -204,7 +204,7 @@ export default {
         position: relative;
       }
       .active, .price-up, .price-down {
-        color: #d13193;
+        color: #ff1a90;
         font-weight: bold;
       }
       .price::after {
@@ -224,10 +224,10 @@ export default {
         right: 0;
       }
       .price-up::before {
-        border-bottom-color: #d13193;
+        border-bottom-color: #ff1a90;
       }
       .price-down::after {
-        border-top-color: #d13193;
+        border-top-color: #ff1a90;
       }
     }
     .list-content {
@@ -246,7 +246,6 @@ export default {
   .card {
     width: 100%;
     box-sizing: border-box;
-    padding: 5px;
     height: 100px;
     display: flex;
     .card-img {

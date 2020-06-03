@@ -96,6 +96,7 @@ export default {
     left: 0;
     width: 79px;
     bottom: 1.33333rem;
+    background: #f8f8f8;
     overflow: auto;
      div {
         width: 100%;
@@ -107,13 +108,13 @@ export default {
       }
       .active {
         font-weight: bold;
-        color: #d13193;
+        color: #ff1a90;
       }
       .active::before {
         position: absolute;
         width: 6px;
         height: 18px;
-        background: #d13193;
+        background: #ff1a90;
         top: 50%;
         transform: translateY(-50%);
         left: 0;

@@ -50,33 +50,67 @@ export default {
   },
   methods: {
     checkAll() {
+      if (!this.$refs.checkboxGroup) {
+        this.$Toast('购物车没有任何有效商品');
+        this.checked = false;
+        return;
+      }
       if (this.checked) {
         this.$refs.checkboxGroup.toggleAll(true);
       } else {
         this.$refs.checkboxGroup.toggleAll(false);
       }
     },
-    addCounter(id, value) {
+    async addCounter(id, value) {
       if (this.counterMap[id]) {
-        this.$set(this.counterMap, id, this.counterMap[id] + value);
+        if (this.counterMap[id] === 1 && value === -1) {
+          await this.$Dialog.confirm({ message: '您是否要删除已选中商品' })
+            .then(() => {
+              this.$set(this.counterMap, id, this.counterMap[id] + value);
+              delete this.counterMap[id];
+              this.list = this.list.filter((item) => item.id !== id);
+            })
+            .catch(() => {});
+        } else {
+          this.$set(this.counterMap, id, this.counterMap[id] + value);
+        }
       } else {
         this.$set(this.counterMap, id, 1);
       }
       localStorage.setItem('goods', JSON.stringify(this.counterMap));
     },
     del() {
+      if (this.result.length === 0) {
+        this.$Toast('你没有选中商品');
+        return;
+      }
+      this.$Dialog.confirm({ message: '您是否要删除已选中商品' })
+        .then(() => {
+          this.result.forEach((id) => {
+            delete this.counterMap[id];
+          });
+          this.list = this.list.filter(
+            (item) => this.result.findIndex(
+              (x) => x === item.id,
+            ) === -1,
+          );
+          if (this.list.length === 0) {
+            this.checked = false;
+          }
+          localStorage.setItem('goods', JSON.stringify(this.counterMap));
+        });
     },
     onSubmit() {
     },
     async getAllData() {
       const result = Object.keys(this.counterMap);
       const res = await this.$api.getGoodsByIds(result.join());
+      this.list = res.data.list;
       this.$nextTick(() => {
-        this.list = res.data.list;
+        if (this.$refs.checkboxGroup) {
+          this.$refs.checkboxGroup.toggleAll(true);
+        }
       });
-      if (this.$refs.checkboxGroup) {
-        this.$refs.checkboxGroup.toggleAll(true);
-      }
     },
   },
   watch: {
@@ -107,9 +141,10 @@ export default {
       ) + prev, 0);
     },
   },
-  mounted() {
+  created() {
     this.getAllData();
   },
+
 };
 </script>
 <style lang="less" scoped>
@@ -126,14 +161,15 @@ export default {
   .card-none {
     width: 100%;
     position: absolute;
-    top: 50px;
+    top: 46px;
     img {
       width: 100%;
     }
   }
   .card-list {
     width: 100%;
-    margin-top: 50px;
+    top: 46px;
+    position: absolute;
     box-sizing: border-box;
     padding: 10px 10px 100px 10px;
     background: #fff;

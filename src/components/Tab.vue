@@ -146,7 +146,7 @@ export default {
 <style lang="less" scoped>
   .tab-wrapper {
     display: flex;
-    height: 92.5px;
+    height: 104px;
     overflow-x: auto;
     overflow-y: visible;
     .tab-item {

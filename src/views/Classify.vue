@@ -15,13 +15,14 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import Tabs from '../components/Tab.vue';
 import sideBar from '../components/sideBar.vue';
 import List from '../components/List.vue';
 
 export default {
   async created() {
+    this.resetList();
     await this.getSideList(this.value);
     this.listShow = true;
   },
@@ -46,6 +47,7 @@ export default {
   },
   methods: {
     ...mapActions(['getSideList']),
+    ...mapMutations(['resetList']),
     getSide(value) {
       this.show = false;
       this.getSideList(value)

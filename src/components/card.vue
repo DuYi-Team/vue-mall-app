@@ -14,9 +14,13 @@
         <div class="price" v-if="priceOff">￥{{price}}</div>
       </div>
       <div class="counter">
-        <div v-if="num" @click="$emit('changeHandler', id, -1)">-</div>
+        <div v-if="num" @click="$emit('changeHandler', id, -1)">
+          <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/rec.png">
+        </div>
         <div v-if="num" class="num">{{num}}</div>
-        <div @click="add">+</div>
+        <div @click="add">
+          <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/add.png">
+        </div>
       </div>
     </div>
     <transition-group
@@ -55,7 +59,7 @@ export default {
       if (!this.fly) {
         return;
       }
-      el.style.opacity = 0;
+      el.style.opacity = 1;
     },
     enter(el, done) {
       if (!this.fly) {
@@ -67,8 +71,18 @@ export default {
         .getBoundingClientRect();
       // 设置小球移动的位移 // 搜索页面飞入购物车有问题，这里就不做处理了，两个动画的逻辑还不一样。
       Velocity(el, {
-        opacity: 1, translateX: carLeft - left, translateY: carTop - top, scaleX: 0.1, scaleY: 0.1,
-      }, { duration: 1000 });
+        opacity: 0.5,
+        translateX: carLeft - left,
+        translateY: carTop - top,
+        scaleX: 0.1,
+        scaleY: 0.1,
+      }, {
+        duration: 1000,
+        complete: () => {
+          this.showMoveDot.shift();
+          done();
+        },
+      });
       Velocity(el, { opacity: 0 }, {
         complete: () => {
           this.showMoveDot.shift();
@@ -87,9 +101,9 @@ export default {
 .card {
     width: 100%;
     box-sizing: border-box;
-    padding: 5px;
     height: 100px;
     display: flex;
+    padding: 5px;
     .card-img {
       width: 90px;
       margin-right: 20px;
@@ -103,24 +117,24 @@ export default {
       flex: 1;
       >div {
         width: 170px;
-        font-size: 12px;
       }
       .title {
-        height: 30px;
-        line-height: 30px;
-        font-size: 14px;
-        font-weight: 400;
+        font-size: 13px;
+        color: #1a1a1a;
+        margin-top: 5px;
       }
       .desc {
         color: #aaa;
-        margin-bottom: 3px;
+        font-size: 11px;
+        margin-top: 5px;
       }
       .tags {
         display: flex;
-        margin-bottom: 3px;
+        margin-top: 4px;
         >div {
+          font-size: 10px;
           border: 1px solid #aaa;
-          padding: 1px;
+          padding: 1px 2px 2px 2px;
           color: #aaa;
           border-radius: 3px;
           margin-right: 5px;
@@ -130,9 +144,10 @@ export default {
       .prices{
         display: flex;
         align-items: center;
+        margin-bottom: 4px;
         .price-off {
           font-size: 14px;
-          color: pink;
+          color: #ff1a90;
           font-weight: 600;
           margin-right: 5px;
         }
@@ -146,19 +161,16 @@ export default {
     .counter {
       display: flex;
       position: absolute;
-      bottom: 5px;
+      bottom: 0px;
       right: 15px;
       justify-content: flex-end;
+      align-items: center;
       > div:not(.num) {
-        font-size: 22px;
-        width: 22px;
-        height: 22px;
-        line-height: 19px;
-        border-radius: 11px;
-        color: white;
-        font-weight: 700;
-        background: lime;
-        text-align: center;
+        width: 16px;
+        height: 16px;
+        img {
+          width: 100%;
+        }
       }
       .num {
         padding:0 5px;
@@ -173,8 +185,10 @@ export default {
         top: 5px;
         height: 90px;
         width: 90px;
-        background: lime;
-        border-radius: 50%;
+        img {
+          width: 100%;
+          border-radius: 50%;
+        }
       }
 
   }

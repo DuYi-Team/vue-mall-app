@@ -53,6 +53,9 @@
     "rules": {
       "no-param-reassign": 0
     },
+    "globals": {
+      "Toast": true
+    },
     "overrides": [
       {
         "files": [
