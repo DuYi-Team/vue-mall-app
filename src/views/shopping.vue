@@ -67,7 +67,7 @@ export default {
           await this.$Dialog.confirm({ message: '您是否要删除已选中商品' })
             .then(() => {
               this.$set(this.counterMap, id, this.counterMap[id] + value);
-              delete this.counterMap[id];
+              this.$delete(this.counterMap, id);
               this.list = this.list.filter((item) => item.id !== id);
             })
             .catch(() => {});
@@ -87,12 +87,19 @@ export default {
       this.$Dialog.confirm({ message: '您是否要删除已选中商品' })
         .then(() => {
           this.result.forEach((id) => {
-            delete this.counterMap[id];
+            this.$delete(this.counterMap, id);
           });
           this.list = this.list.filter(
-            (item) => this.result.findIndex(
-              (x) => x === item.id,
-            ) === -1,
+            (item) => {
+              const len = this.result.findIndex(
+                (x) => x === item.id,
+              );
+              if (len === -1) {
+                return true;
+              }
+              this.result.splice(len, 1);
+              return false;
+            },
           );
           if (this.list.length === 0) {
             this.checked = false;
