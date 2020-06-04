@@ -60,6 +60,8 @@ export default {
       pageY: 0,
       msg: '上拉查看下一分类',
       nowPage: 1,
+      moveX: 2,
+      moveY: 1,
     };
   },
   methods: {
@@ -118,6 +120,9 @@ export default {
       }, 300);
     },
     up(e) {
+      if (this.over) {
+        return;
+      }
       const { wrapper } = this.$refs;
       let speed = 5;
       if (wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight) {
@@ -143,6 +148,9 @@ export default {
       }
     },
     end() {
+      if (this.over) {
+        return;
+      }
       const { list } = this.$refs;
       if (!list) {
         return;
@@ -160,12 +168,20 @@ export default {
       list: (state) => state.goodsList,
       total: (state) => state.goodsTotal,
       goodsType: (state) => state.goodsType,
+      over: (state) => state.over,
     }),
   },
   watch: {
     goodsType() {
       this.finished = false;
       this.nowPage = 1;
+    },
+    over() {
+      if (this.over) {
+        this.msg = '没有了';
+      } else {
+        this.msg = '上拉查看下一分类';
+      }
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="card van-hairline--bottom">
     <div class="card-img">
-      <img :src="thumb">
+      <img :src="thumb" ref="img">
     </div>
     <div class="card-content">
       <div class="overflow-hidden title">{{title}}</div>
@@ -23,21 +23,11 @@
         </div>
       </div>
     </div>
-    <transition-group
-      v-on:before-enter="beforeEnter"
-      v-on:enter="enter"
-      v-on:leave="leave"
-      v-bind:css="false"
-      >
-        <div class="move-dot" v-for="(item, index) in showMoveDot"  :key="index">
-          <img :src="thumb">
-        </div>
-    </transition-group>
   </div>
 </template>
 
 <script>
-import Velocity from 'velocity-animate';
+import Animate from '@/tools/animate';
 
 export default {
   data() {
@@ -45,6 +35,8 @@ export default {
       showMoveDot: [],
       elLeft: 0,
       elTop: 0,
+      x: 0,
+      y: 0,
     };
   },
   props: ['price', 'priceOff', 'title', 'tags', 'desc', 'num', 'thumb', 'id', 'fly'],
@@ -54,44 +46,20 @@ export default {
         this.showMoveDot = [...this.showMoveDot, true];
       }
       this.$emit('changeHandler', this.id, 1);
-    },
-    beforeEnter(el) {
-      if (!this.fly) {
-        return;
-      }
-      el.style.opacity = 1;
-    },
-    enter(el, done) {
-      if (!this.fly) {
-        return;
-      }
-      const { left, top } = el.getBoundingClientRect();
-      const { left: carLeft, top: carTop } = document
+      const { top, left } = this.$refs.img.getBoundingClientRect();
+      const { left: endX, top: endY } = document
         .getElementById('shop-car')
         .getBoundingClientRect();
-      // 设置小球移动的位移 // 搜索页面飞入购物车有问题，这里就不做处理了，两个动画的逻辑还不一样。
-      Velocity(el, {
-        opacity: 0.5,
-        translateX: carLeft - left,
-        translateY: carTop - top,
-        scaleX: 0.1,
-        scaleY: 0.1,
-      }, {
-        duration: 1000,
-        complete: () => {
-          this.showMoveDot.shift();
-          done();
-        },
+      const { width, height } = getComputedStyle(this.$refs.img, null);
+      Animate({
+        startX: left,
+        startY: top,
+        endX,
+        endY,
+        src: this.$refs.img.src,
+        width,
+        height,
       });
-      Velocity(el, { opacity: 0 }, {
-        complete: () => {
-          this.showMoveDot.shift();
-          done();
-        },
-      });
-    },
-    leave() {
-
     },
   },
 };
@@ -103,7 +71,6 @@ export default {
     box-sizing: border-box;
     height: 100px;
     display: flex;
-    padding: 5px;
     .card-img {
       width: 90px;
       margin-right: 20px;
@@ -161,7 +128,7 @@ export default {
     .counter {
       display: flex;
       position: absolute;
-      bottom: 0px;
+      bottom: -3px;
       right: 15px;
       justify-content: flex-end;
       align-items: center;
@@ -179,10 +146,8 @@ export default {
       }
     }
      .move-dot {
-        position: absolute;
+        position: relative;
         z-index: 500;
-        left: 5px;
-        top: 5px;
         height: 90px;
         width: 90px;
         img {

@@ -13,8 +13,12 @@ export default new Vuex.Store({
     counterMap: {},
     size: 7,
     sortType: 'all',
+    over: false,
   },
   mutations: {
+    changeOver(state, bool) {
+      state.over = bool;
+    },
     sortGoodsList(state, type) {
       state.sortType = type;
       if (type === 'all') {

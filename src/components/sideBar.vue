@@ -21,6 +21,7 @@ export default {
       value: '',
       nextSibling: null,
       list: [],
+      over: false,
     };
   },
   props: {
@@ -32,9 +33,12 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['resetGoodsList']),
+    ...mapMutations(['resetGoodsList', 'changeOver']),
     ...mapActions(['getGoodsList']),
     scrollTo(e) {
+      if (this.move) {
+        return;
+      }
       this.resetGoodsList();
       this.nextSibling = e.target.nextElementSibling;
       const cTop = e.target.getBoundingClientRect().top;
@@ -51,6 +55,7 @@ export default {
     },
     moveScroll(start, end) {
       if (this.move) {
+        this.move = false;
         return;
       }
       let dis = 0;
@@ -68,7 +73,13 @@ export default {
       }, 2);
     },
     nb() {
-      const sibling = this.nextSibling || this.$refs.side.children[1];
+      let sibling = null;
+      if (this.nextSibling) {
+        sibling = this.nextSibling;
+      } else if (this.over === false) {
+        [, sibling] = this.$refs.side.children;
+        this.over = true;
+      }
       if (sibling) {
         this.getValue(sibling.innerText);
         this.scrollTo({ target: sibling });
@@ -83,6 +94,13 @@ export default {
     menuList() {
       this.list = this.menuList;
       [this.value] = this.list;
+    },
+    nextSibling() {
+      if (this.nextSibling === null) {
+        this.changeOver(true);
+      } else {
+        this.changeOver(false);
+      }
     },
   },
 };
