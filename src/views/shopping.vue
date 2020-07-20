@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import Card from '../components/card.vue';
 
 export default {
@@ -49,6 +49,7 @@ export default {
     Card,
   },
   methods: {
+    ...mapMutations(['storageChange']),
     checkAll() {
       if (!this.$refs.checkboxGroup) {
         this.$Toast('购物车没有任何有效商品');
@@ -62,50 +63,44 @@ export default {
       }
     },
     async addCounter(id, value) {
-      if (this.counterMap[id]) {
+      try {
         if (this.counterMap[id] === 1 && value === -1) {
-          await this.$Dialog.confirm({ message: '您是否要删除已选中商品' })
-            .then(() => {
-              this.$set(this.counterMap, id, this.counterMap[id] + value);
-              this.$delete(this.counterMap, id);
-              this.list = this.list.filter((item) => item.id !== id);
-            })
-            .catch(() => {});
-        } else {
-          this.$set(this.counterMap, id, this.counterMap[id] + value);
+          await this.$Dialog.confirm({ message: '您是否要删除已选中商品' });
+          this.list = this.list.filter((item) => item.id !== id);
         }
-      } else {
-        this.$set(this.counterMap, id, 1);
+        this.storageChange({ id, value });
+      } catch (error) {
+        console.log('用户取消点击');
       }
-      localStorage.setItem('goods', JSON.stringify(this.counterMap));
     },
-    del() {
+    async del() {
       if (this.result.length === 0) {
         this.$Toast('你没有选中商品');
         return;
       }
-      this.$Dialog.confirm({ message: '您是否要删除已选中商品' })
-        .then(() => {
-          this.result.forEach((id) => {
-            this.$delete(this.counterMap, id);
-          });
-          this.list = this.list.filter(
-            (item) => {
-              const len = this.result.findIndex(
-                (x) => x === item.id,
-              );
-              if (len === -1) {
-                return true;
-              }
-              this.result.splice(len, 1);
-              return false;
-            },
-          );
-          if (this.list.length === 0) {
-            this.checked = false;
-          }
-          localStorage.setItem('goods', JSON.stringify(this.counterMap));
+      try {
+        await this.$Dialog.confirm({ message: '您是否要删除已选中商品' });
+        this.result.forEach((id) => {
+          this.storageChange({ id, value: -1 });
         });
+        this.list = this.list.filter(
+          (item) => {
+            const len = this.result.findIndex(
+              (x) => x === item.id,
+            );
+            if (len === -1) {
+              return true;
+            }
+            this.result.splice(len, 1);
+            return false;
+          },
+        );
+        if (this.list.length === 0) {
+          this.checked = false;
+        }
+      } catch (error) {
+        this.$Toast('用户点击了取消');
+      }
     },
     onSubmit() {
     },

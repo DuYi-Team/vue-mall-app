@@ -21,23 +21,6 @@ export default new Vuex.Store({
     },
     sortGoodsList(state, type) {
       state.sortType = type;
-      if (type === 'all') {
-        state.goodsList.sort((prev, next) => prev.id - next.id);
-      } else if (type === 'sale') {
-        state.goodsList.sort((prev, next) => next.sale - prev.sale);
-      } else if (type === 'price-up') {
-        state.goodsList.sort((prev, next) => {
-          const a = prev.priceOff || prev.price;
-          const b = next.priceOff || next.price;
-          return a - b;
-        });
-      } else if (type === 'price-down') {
-        state.goodsList.sort((prev, next) => {
-          const a = prev.priceOff || prev.price;
-          const b = next.priceOff || next.price;
-          return b - a;
-        });
-      }
     },
     setCounterMap(state, map) {
       state.counterMap = map;
@@ -58,22 +41,39 @@ export default new Vuex.Store({
     resetList(state) {
       state.goodsList = [];
     },
+    storageChange(state, { id, value }) {
+      if (state.counterMap[id]) {
+        if (state.counterMap[id] === 1 && value === -1) {
+          Vue.delete(state.counterMap, id);
+        } else {
+          Vue.set(state.counterMap, id, state.counterMap[id] + value);
+        }
+      } else {
+        Vue.set(state.counterMap, id, 1);
+      }
+      localStorage.setItem('goods', JSON.stringify(state.counterMap));
+      // if (state.counterMap[id]) {
+      //   Vue.set(state.counterMap, id, state.counterMap[id] + value);
+      // } else {
+      //   Vue.set(state.counterMap, id, 1);
+      // }
+      // localStorage.setItem('goods', JSON.stringify(state.counterMap));
+    },
   },
   actions: {
     getSideList({ commit, dispatch }, type) {
       return api.getSideList(type).then((data) => {
-        commit('setSideList', data.data);
-        commit('setGoodsType', data.data[0]);
-        dispatch('getGoodsList', { type: data.data[0], page: 1 });
+        commit('setSideList', data.data.map);
+        commit('setGoodsType', data.data.map[0].value);
+        dispatch('getGoodsList', { type: data.data.map[0].value, page: 1 });
       });
     },
     getGoodsList({ commit, state }, t) {
       const type = t.type || state.goodsType;
       const { page } = t;
-      return api.getGoodsList(type, page, state.size).then((data) => {
+      return api.getGoodsList(type, page, state.size, state.sortType).then((data) => {
         commit('setGoodsList', data.data);
         commit('setGoodsType', type);
-        commit('sortGoodsList', state.sortType);
       });
     },
   },

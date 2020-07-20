@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import Card from '../components/card.vue';
 import History from '../components/history.vue';
 
@@ -82,13 +82,9 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(['storageChange']),
     addCounter(id, value) {
-      if (this.counterMap[id]) {
-        this.$set(this.counterMap, id, this.counterMap[id] + value);
-      } else {
-        this.$set(this.counterMap, id, 1);
-      }
-      localStorage.setItem('goods', JSON.stringify(this.counterMap));
+      this.storageChange({ id, value });
     },
     onSearch(val) {
       if (val) {

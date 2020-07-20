@@ -33,6 +33,7 @@
           :num="counterMap[item.id]"
           :tags="item.tags"
           :fly="true"
+          :sellOut="item.sellOut"
           @changeHandler="addCounter"></Card>
         </van-list>
       </van-pull-refresh>
@@ -66,14 +67,9 @@ export default {
   },
   methods: {
     ...mapActions(['getGoodsList']),
-    ...mapMutations(['resetList', 'sortGoodsList']),
+    ...mapMutations(['resetList', 'sortGoodsList', 'storageChange']),
     addCounter(id, value) {
-      if (this.counterMap[id]) {
-        this.$set(this.counterMap, id, this.counterMap[id] + value);
-      } else {
-        this.$set(this.counterMap, id, 1);
-      }
-      localStorage.setItem('goods', JSON.stringify(this.counterMap));
+      this.storageChange({ id, value });
     },
     onLoad() {
       if (this.finished) {
@@ -88,7 +84,7 @@ export default {
         }
       });
     },
-    changeType(val) {
+    async changeType(val) {
       if (val === 'price') {
         if (this.type === 'price-up') {
           this.type = 'price-down';
@@ -99,14 +95,16 @@ export default {
         this.type = val;
       }
       this.sortGoodsList(this.type);
+      this.resetList();
+      // this.getGoodsList()
       this.showLoading = true;
-      this.$nextTick(() => {
-        this.finished = false;
-        this.isloading = false;
-        this.list.sort();
-        this.isLoad = false;
-        this.showLoading = false;
-      });
+      this.nowPage = 1;
+      await this.getGoodsList({ type: this.goodsType, page: this.nowPage });
+      this.finished = false;
+      this.isloading = false;
+      this.list.sort();
+      this.isLoad = false;
+      this.showLoading = false;
     },
     onRefresh() {
       this.nowPage = 0;
@@ -125,7 +123,7 @@ export default {
       }
       const { wrapper } = this.$refs;
       let speed = 5;
-      if (wrapper.scrollHeight - wrapper.scrollTop === wrapper.clientHeight) {
+      if (parseInt(wrapper.scrollHeight - wrapper.scrollTop, 10) <= wrapper.clientHeight) {
         if (e.touches[0].pageY > this.pageY) {
           speed = -5;
         } else {
@@ -190,7 +188,7 @@ export default {
 <style lang="less" scoped>
   .list-wrapper {
     transform: translateY(0);
-    transition: all 2s;
+    transition: all .3s;
     position: fixed;
     border-top: 1px solid #eee;
     top: 135px;
@@ -248,7 +246,7 @@ export default {
     }
     .list-content {
       position: relative;
-      transition: translateY .3s;
+      transition: translateY .3s linear;
       .list-item {
         background: red;
         border-bottom: 1px solid white;

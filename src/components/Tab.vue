@@ -28,6 +28,10 @@ export default {
           imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/时令水果.jpg',
         },
         {
+          title: '酒水冲调',
+          imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/酒水冲调.jpg',
+        },
+        {
           title: '安心乳品',
           imgURL: 'https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/安心乳品.jpg',
         },

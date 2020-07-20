@@ -1,8 +1,8 @@
 import Axios from 'axios';
-import URLs from './URLS';
+import baseURL, { URLs } from './URLS';
 
 const instance = Axios.create({
-  baseURL: URLs.baseURL,
+  baseURL,
 });
 
 const likeSearch = (value) => instance.get(
@@ -13,9 +13,13 @@ const getSideList = (value) => instance.get(
   URLs.getSide,
   { params: { type: value } },
 );
-const getGoodsList = (value, page, size) => instance.get(
+const getGoodsList = (value, page, size, sort = 'all') => instance.get(
   URLs.getGoodsList,
-  { params: { type: value, page, size } },
+  {
+    params: {
+      type: value, page, size, sort,
+    },
+  },
 );
 const Search = (value, page, size) => instance.get(
   URLs.search,

@@ -13,7 +13,7 @@
         <div class="price-off">￥{{priceOff || price}}</div>
         <div class="price" v-if="priceOff">￥{{price}}</div>
       </div>
-      <div class="counter">
+      <div class="counter" v-if="!sellOut">
         <div v-if="num" @click="$emit('changeHandler', id, -1)">
           <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/rec.png">
         </div>
@@ -22,6 +22,7 @@
           <img src="https://duyi-bucket.oss-cn-beijing.aliyuncs.com/img/add.png">
         </div>
       </div>
+      <div class="smaller" v-else >找相似</div>
     </div>
   </div>
 </template>
@@ -39,7 +40,7 @@ export default {
       y: 0,
     };
   },
-  props: ['price', 'priceOff', 'title', 'tags', 'desc', 'num', 'thumb', 'id', 'fly'],
+  props: ['price', 'priceOff', 'title', 'tags', 'desc', 'num', 'thumb', 'id', 'fly', 'sellOut'],
   methods: {
     add() {
       if (this.fly) {
@@ -82,7 +83,7 @@ export default {
     .card-content {
       position: relative;
       flex: 1;
-      >div {
+      >div:not(.smaller) {
         width: 170px;
       }
       .title {
@@ -128,7 +129,7 @@ export default {
     .counter {
       display: flex;
       position: absolute;
-      bottom: -3px;
+      bottom: 12px;
       right: 15px;
       justify-content: flex-end;
       align-items: center;
@@ -144,6 +145,19 @@ export default {
         height: 22px;
         line-height: 22px;
       }
+    }
+    .smaller {
+      text-align: right;
+      justify-content: flex-end;
+      position: absolute;
+      bottom: 9px;
+      right: 15px;
+      border: 1px solid #ff1a90;
+      border-radius: 4px;
+      padding: 2px;
+      width: 38px;
+      color: #ff1a90;
+      font-size: 12px;
     }
      .move-dot {
         position: relative;

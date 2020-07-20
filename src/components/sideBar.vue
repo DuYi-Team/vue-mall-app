@@ -2,12 +2,14 @@
   <div class="side-bar-wrapper"
   @touchstart="move=false"
   @touchmove="move=true"
-  @touchend="scrollTo" ref="side">
+  @touchend="scrollTo" ref="side" >
       <div
-      v-for="key in list"
-      :key="key"
-      :class="{active: value == key}"
-      @touchend="getValue(key)">{{ key }}</div>
+      v-for="item in list"
+      :key="item.value"
+      :class="{active: value == item.key}"
+      :data-value="item.value"
+      :data-key="item.key"
+      @touchend="getValue(item)">{{ item.key }}</div>
   </div>
 </template>
 
@@ -46,12 +48,13 @@ export default {
       const sideHeight = this.$refs.side.offsetHeight / 2;
       this.moveScroll(this.$refs.side.scrollTop, (sideHeight - (cTop - sideTop)));
     },
-    getValue(key) {
+    getValue(item) {
       if (this.move) {
         return;
       }
-      this.value = key;
-      this.getGoodsList({ type: this.value, page: 1 });
+      this.value = item.key;
+      console.log(item.value);
+      this.getGoodsList({ type: item.value, page: 1 });
     },
     moveScroll(start, end) {
       if (this.move) {
@@ -81,19 +84,20 @@ export default {
         this.over = true;
       }
       if (sibling) {
-        this.getValue(sibling.innerText);
+        const { key, value } = sibling.dataset;
+        this.getValue({ key, value });
         this.scrollTo({ target: sibling });
       }
     },
   },
-  mounted() {
+  created() {
     this.list = this.menuList;
-    [this.value] = this.list;
+    this.value = this.list[0] && this.list[0].key;
   },
   watch: {
     menuList() {
       this.list = this.menuList;
-      [this.value] = this.list;
+      this.value = this.list[0].key;
     },
     nextSibling() {
       if (this.nextSibling === null) {
