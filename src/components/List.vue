@@ -29,7 +29,7 @@
           :desc="item.desc"
           :priceOff="item.priceOff"
           :price="item.price"
-          :thumb="item.img"
+          :thumb="item.images[0]"
           :num="counterMap[item.id]"
           :tags="item.tags"
           :fly="true"

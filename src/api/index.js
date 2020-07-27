@@ -1,8 +1,12 @@
 import Axios from 'axios';
 import baseURL, { URLs } from './URLS';
 
+const appkey = 'dingding_1595216649109';
 const instance = Axios.create({
   baseURL,
+  params: {
+    appkey,
+  },
 });
 
 const likeSearch = (value) => instance.get(

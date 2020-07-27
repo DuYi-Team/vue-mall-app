@@ -4,12 +4,11 @@
   @touchmove="move=true"
   @touchend="scrollTo" ref="side" >
       <div
-      v-for="item in list"
-      :key="item.value"
-      :class="{active: value == item.key}"
-      :data-value="item.value"
-      :data-key="item.key"
-      @touchend="getValue(item)">{{ item.key }}</div>
+      v-for="(item, index) in list"
+      :key="item"
+      :class="{active: value == item}"
+      :data-item="item"
+      @touchend="getValue(item)">{{ index == 0 ? '全部' : item}}</div>
   </div>
 </template>
 
@@ -52,9 +51,8 @@ export default {
       if (this.move) {
         return;
       }
-      this.value = item.key;
-      console.log(item.value);
-      this.getGoodsList({ type: item.value, page: 1 });
+      this.value = item;
+      this.getGoodsList({ type: item, page: 1 });
     },
     moveScroll(start, end) {
       if (this.move) {
@@ -84,20 +82,21 @@ export default {
         this.over = true;
       }
       if (sibling) {
-        const { key, value } = sibling.dataset;
-        this.getValue({ key, value });
+        const { item } = sibling.dataset;
+        console.log(sibling.dataset);
+        this.getValue(item);
         this.scrollTo({ target: sibling });
       }
     },
   },
   created() {
     this.list = this.menuList;
-    this.value = this.list[0] && this.list[0].key;
+    [this.value] = this.list;
   },
   watch: {
     menuList() {
       this.list = this.menuList;
-      this.value = this.list[0].key;
+      [this.value] = this.menuList;
     },
     nextSibling() {
       if (this.nextSibling === null) {

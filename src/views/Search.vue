@@ -44,7 +44,7 @@
         :desc="item.desc"
         :priceOff="item.priceOff"
         :price="item.price"
-        :thumb="item.img"
+        :thumb="item.images[0]"
         :num="counterMap[item.id]"
         :tags="item.tags"
         @changeHandler="addCounter"></Card>
@@ -188,6 +188,7 @@ export default {
     }
   }
   .like-search {
+    top: 50px;
     position: relative;
     width: 100%;
     box-sizing: border-box;

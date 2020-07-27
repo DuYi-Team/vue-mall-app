@@ -17,7 +17,7 @@
           :desc="item.desc"
           :priceOff="item.priceOff"
           :price="item.price"
-          :thumb="item.img"
+          :thumb="item.images[0]"
           :num="counterMap[item.id]"
           :tags="item.tags"
           @changeHandler="addCounter"></Card>
@@ -138,9 +138,10 @@ export default {
     },
     allMoney() {
       const resArr = this.list.filter((item) => this.result.includes(item.id));
-      return resArr.reduce((prev, next) => Math.round(
-        (this.counterMap[next.id] || 0) * next.priceOff * 100,
-      ) + prev, 0);
+      return resArr.reduce((prev, next) => {
+        const num = this.counterMap[next.id] || 0;
+        return (Math.round(num * next.price * 100) + prev);
+      }, 0);
     },
   },
   created() {
