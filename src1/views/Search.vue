@@ -50,7 +50,7 @@
         @changeHandler="addCounter"></Card>
     </van-list>
     </div>
-    <div class="history" v-if="likeList.length <= 0 && showList">
+    <div class="history">
        <History :searchList="searchList" @search="onSearch"></History>
     </div>
   </div>
@@ -130,8 +130,6 @@ export default {
     input() {
       if (this.value === '') {
         this.likeList = [];
-        clearInterval(this.timer);
-        this.timer = null;
         return;
       }
       if (this.timer) {

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script crossorigin="anonymous" integrity="sha384-+jvb+jCJ37FkNjPyYLI3KJzQeD8pPFXUra3B/QJFqQ3txYrUPIP1eOfxK4h3cKZP" src="https://lib.baomitu.com/vue/2.6.11/vue.js"></script>
+  <style>
+    .img {
+      width: 100px;
+      height: 100px;
+      background: red;
+      transition: all 18s;
+      position: fixed;
+      top: 0;
+      left: 0;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+   <div class="btn" id="btn">打我</div>
+   <script>
+        var btn = document.getElementById("btn");
+        btn.onclick = function () {
+          var x = 100;
+          var y = 200;
+          var xx = 1;
+          var yy = 1;
+          var xend = 200;
+          var yend = 300;
+          var app = new Vue({
+            template: "<div class='img' :style='{transform: `translate(${x}px,${y}px) scale(${xx},${yy})`, opacity}' v-if='exist'></div>",
+            el: document.createElement('div'),
+            data: {
+              x,
+              y,
+              xx,
+              yy,
+              exist: true, 
+              opacity: 1
+            }
+          })
+          document.body.appendChild(app.$el);
+          setTimeout(function () {
+            app.x = xend;
+            app.y = yend;
+            app.xx = .1;
+            app.yy = .1;
+            app.opacity = 0;
+          },0);
+          setTimeout(function () {
+            app.exist = false;
+          },19000);
+        }     
+   </script>
+</body>
+</html>

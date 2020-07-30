@@ -83,6 +83,7 @@ export default {
       }
       if (sibling) {
         const { item } = sibling.dataset;
+        console.log(sibling.dataset);
         this.getValue(item);
         this.scrollTo({ target: sibling });
       }
