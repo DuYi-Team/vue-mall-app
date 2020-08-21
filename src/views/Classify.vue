@@ -81,7 +81,7 @@ export default {
     height: 31.5px;
     line-height: 31.5px;
     width: 355px;
-    margin: 10.76px auto 0;
+    margin: 10.5px auto 0;
     background: #eee;
     border-radius: 10px;
     text-align: center;

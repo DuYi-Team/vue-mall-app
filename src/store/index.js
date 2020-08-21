@@ -65,7 +65,7 @@ export default new Vuex.Store({
       return api.getSideList(type).then((data) => {
         commit('setSideList', data.data);
         commit('setGoodsType', data.data[0]);
-        commit('sortGoodsList', 'all');
+        // commit('sortGoodsList', 'all');
         dispatch('getGoodsList', { type: data.data[0], page: 1 });
       });
     },
