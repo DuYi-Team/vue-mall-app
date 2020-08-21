@@ -1,29 +1,53 @@
-# app
+# 每日优鲜C端项目
 
-## Project setup
-```
-yarn install
-```
+## 项目接口
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+1. 获取二级导航
+请求方法： GET
+请求路径：/getsidebar
+请求参数：
 
-### Compiles and minifies for production
-```
-yarn run build
-```
+| 参数 | 说明|
+| :---: | :---: |
+| type | 获取对应一级导航的二级导航 |
 
-### Run your tests
-```
-yarn run test
-```
+2. 获取商品列表
+请求方法： GET
+请求路径：/getGoodsList
+请求参数：
 
-### Lints and fixes files
-```
-yarn run lint
-```
+| 参数 | 说明|
+| :---: | :---: |
+| type | 商品列表的type |
+| page | 翻页 |
+| size | 每页的大小 |
+| sort| 排序方式 |
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+3. 模糊搜索
+请求方法： GET
+请求路径：/likeSearch
+请求参数：
+
+| 参数 | 说明|
+| :---: | :---: |
+| likeValue | 模糊搜索值 |
+
+4. 搜索
+请求方法： GET
+请求路径：/search
+请求参数：
+
+| 参数 | 说明|
+| :---: | :---: |
+| type | 搜索内容 |
+| page | 翻页 |
+| size | 每页大小 |
+
+5. 根据商品列表进行搜索
+请求方法： GET
+请求路径：/getGoodsByIds
+请求参数：
+
+| 参数 | 说明|
+| :---: | :---: |
+| value | 若干产品的id |
